@@ -344,11 +344,11 @@ class InterpretableMultiHeadAttention(nn.Module):
             v_i = self.vs[i](value)
 
             # Reshape q, k, v for multihead attention
-            q_i = query.reshape(batch_size, tgt_len, self.num_attention_heads, head_dim).transpose(1, 2).reshape(
+            q_i = q_i.reshape(batch_size, tgt_len, self.num_attention_heads, head_dim).transpose(1, 2).reshape(
                 batch_size * self.num_attention_heads, tgt_len, head_dim)
-            k_i = key.reshape(batch_size, tgt_len, self.num_attention_heads, head_dim).transpose(1, 2).reshape(
+            k_i = k_i.reshape(batch_size, tgt_len, self.num_attention_heads, head_dim).transpose(1, 2).reshape(
                 batch_size * self.num_attention_heads, tgt_len, head_dim)
-            v_i = value.reshape(batch_size, tgt_len, self.num_attention_heads, head_dim).transpose(1, 2).reshape(
+            v_i = v_i.reshape(batch_size, tgt_len, self.num_attention_heads, head_dim).transpose(1, 2).reshape(
                 batch_size * self.num_attention_heads, tgt_len, head_dim)
 
             head, attention = self.attention(q_i, k_i, v_i, mask)
