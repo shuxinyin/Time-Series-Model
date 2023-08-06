@@ -32,6 +32,7 @@ class GLU(nn.Module):
         """
         Args:
             x (torch.tensor): tensor passing through the gate
+            sigmoid(Wx) * (Wx)
         """
         gate = self.sigmoid(self.b(x))
         x = self.a(x)

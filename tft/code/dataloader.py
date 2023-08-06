@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 class WebTrafficGenerator:
     def __init__(self, start_date='2021-01-01', end_date='2024-12-31', trend_base=0.5,
                  weekly_seasonality=None, yearly_seasonality=None, noise_multiplier=10):
-        self.dates = dates = pd.date_range(start=start_date, end=end_date, freq='D')
+        self.dates = pd.date_range(start=start_date, end=end_date, freq='D')
         self.trend_base = trend_base
         self.weekly_seasonality = weekly_seasonality
         self.yearly_seasonality = yearly_seasonality
@@ -101,6 +101,8 @@ def get_data():
                                                 noise_multiplier=80)
 
         traffic = traffic_generator.generate_data()
+        # print(traffic.head())
+
         tmp = pd.DataFrame(data={"date": traffic_generator.dates, "traffic": traffic})
         tmp["Entity"] = [e] * tmp.shape[0]
         tmp["Class"] = [group] * tmp.shape[0]
@@ -121,7 +123,7 @@ def get_data():
     # plt.show()
 
     train = raw[raw['date'] < '2023-01-01']
-    valid = raw.loc[(raw['date'] >= '2023-01-01') & (raw['date'] < '2024-01-01')]
+    # valid = raw.loc[(raw['date'] >= '2023-01-01') & (raw['date'] < '2024-01-01')]
     test = raw.loc[(raw['date'] > '2024-01-01')]
 
     real_columns = ['traffic', "Delta", 'DaysFromStart']
@@ -155,6 +157,7 @@ class TFT_Dataset(Dataset):
                  input_columns, encoder_steps, decoder_steps):
         """
           data (pd.DataFrame): dataframe containing raw data
+          train_column_unique (list): not None
           entity_column (str): name of column containing entity data
           time_column (str): name of column containing date data
           target_column (str): name of column we need to predict

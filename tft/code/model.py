@@ -47,12 +47,12 @@ class TemporalFusionTransformer(nn.Module):
 
         # Inputs
         self.col_to_idx = parameters["col_to_idx"]
-        self.static_covariates = parameters["static_covariates"]
+        self.static_covariates = parameters["static_covariates"]  # static feature
         self.time_dependent_categorical = parameters["time_dependent_categorical"]
         self.time_dependent_continuous = parameters["time_dependent_continuous"]
         self.category_counts = parameters["category_counts"]
-        self.known_time_dependent = parameters["known_time_dependent"]
-        self.observed_time_dependent = parameters["observed_time_dependent"]
+        self.known_time_dependent = parameters["known_time_dependent"]  # known feature
+        self.observed_time_dependent = parameters["observed_time_dependent"]  # observed feature
         self.time_dependent = self.known_time_dependent + self.observed_time_dependent
 
         # Architecture
@@ -70,9 +70,11 @@ class TemporalFusionTransformer(nn.Module):
         # Other
         self.device = parameters['device']
 
-        # Prepare for input transformation (embeddings for categorical variables and linear transformations for continuous variables)
+        # Prepare for input transformation (embeddings for categorical variables and
+        # linear transformations for continuous variables)
 
-        # Prepare embeddings for the static covariates and static context vectors
+        # Prepare embeddings for the static covariates and static context vectors,
+        # shape = [feat_category_counts, emb_dim]
         self.static_embeddings = nn.ModuleDict(
             {col: nn.Embedding(self.category_counts[col], self.embedding_dim).to(self.device) for col in
              self.static_covariates})
@@ -118,7 +120,7 @@ class TemporalFusionTransformer(nn.Module):
         self.gated_skip_connection = TemporalLayer(GLU(self.hidden_size))
         self.add_norm = TemporalLayer(nn.BatchNorm1d(self.hidden_size))
 
-        # Temporal Fusion Decoder
+        ############ Temporal Fusion Decoder  ############
 
         # Static enrichment layer
         self.static_enrichment = GatedResidualNetwork(self.hidden_size, self.hidden_size, self.hidden_size,
@@ -293,13 +295,12 @@ if __name__ == '__main__':
         "encoder_steps": ENCODER_STEPS,
         "num_attention_heads": NUM_ATTENTION_HEADS,
         "col_to_idx": col_to_idx,
-        "static_covariates": ["Region", "Symbol"],
-        "time_dependent_categorical": ["day_of_week", "day_of_month", "week_of_year", "month"],
-        "time_dependent_continuous": ['log_vol', 'days_from_start', "open_to_close", ],
-        "category_counts": {"day_of_week": 7, "day_of_month": 31, "week_of_year": 53, "month": 12, "Region": 4,
-                            "Symbol": 31},
-        "known_time_dependent": ["day_of_week", "day_of_month", "week_of_year", "month", "days_from_start"],
-        "observed_time_dependent": ["log_vol", "open_to_close"]
+        "static_covariates": ['Class', 'Entity'],
+        "time_dependent_categorical": ['DayOfWeek', 'DayOfMonth', 'WeekOfYear', 'Month'],
+        "time_dependent_continuous": ['traffic', 'DaysFromStart', "Delta"],
+        "category_counts": {"DayOfWeek": 7, "DayOfMonth": 31, "WeekOfYear": 53, "Month": 12, "Class": 3, "Entity": 16},
+        "known_time_dependent": ['DayOfWeek', 'DayOfMonth', 'WeekOfYear', 'Month', 'DaysFromStart'],
+        "observed_time_dependent": ["traffic", "Delta"]
     }
     model = TemporalFusionTransformer(params)
     model.to(DEVICE)
