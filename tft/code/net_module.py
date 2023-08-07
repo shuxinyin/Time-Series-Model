@@ -354,9 +354,8 @@ class InterpretableMultiHeadAttention(nn.Module):
             head, attention = self.attention(q_i, k_i, v_i, mask)
 
             # Revert to original target shape
-            head = head.reshape(batch_size, self.num_attention_heads, tgt_len, head_dim).transpose(1, 2).reshape(-1,
-                                                                                                                 tgt_len,
-                                                                                                                 self.num_attention_heads * head_dim)
+            head = head.reshape(batch_size, self.num_attention_heads, tgt_len, head_dim
+                                ).transpose(1, 2).reshape(-1, tgt_len, self.num_attention_heads * head_dim)
             head_dropout = self.dropout(head)
             heads.append(head_dropout)
             attentions.append(attention)

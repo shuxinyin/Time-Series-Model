@@ -37,7 +37,7 @@ QUANTILES = [0.1, 0.5, 0.9]
 
 # Dataset variables
 input_columns = ["traffic", "Delta", 'DaysFromStart', 'DayOfWeek', 'DayOfMonth', 'WeekOfYear', 'Month', 'Entity',
-                 'Class', 'Entity']
+                 'Class']
 target_column = "traffic"
 entity_column = "Entity"
 time_column = "date"

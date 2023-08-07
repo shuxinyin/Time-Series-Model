@@ -117,6 +117,7 @@ def get_data():
         raw = pd.concat([raw, tmp])
 
     raw.reset_index(inplace=True)
+    # raw.to_csv("../data/traffic_demo.csv", header=True, index=False, sep='\t', encoding="utf-8")、
     # total = raw.groupby("date")["traffic"].sum()
     # plt.plot(total.index, total)
     # plt.xticks(rotation=90);
@@ -126,8 +127,8 @@ def get_data():
     # valid = raw.loc[(raw['date'] >= '2023-01-01') & (raw['date'] < '2024-01-01')]
     test = raw.loc[(raw['date'] > '2024-01-01')]
 
-    real_columns = ['traffic', "Delta", 'DaysFromStart']
-    categorical_columns = ['Entity', 'DayOfWeek', 'DayOfMonth', 'WeekOfYear', 'Month', 'Class']
+    real_columns = ['traffic', "Delta", 'DaysFromStart']  # scalar value
+    categorical_columns = ['Entity', 'DayOfWeek', 'DayOfMonth', 'WeekOfYear', 'Month', 'Class']  # categorical
 
     real_scalers, categorical_scalers = fit_preprocessing(train, real_columns, categorical_columns)
 
