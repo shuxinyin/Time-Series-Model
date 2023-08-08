@@ -5,14 +5,11 @@
 # @File: tft.py
 # @Description:
 
-
 import os
 import sys
 import warnings
 
 warnings.filterwarnings("ignore")  # avoid printing out absolute paths
-
-os.chdir("./")
 
 import copy
 import pprint
@@ -33,10 +30,12 @@ from pytorch_forecasting.models.temporal_fusion_transformer.tuning import optimi
 
 from pytorch_forecasting.data.examples import get_stallion_data
 
-fname = "./data/stallion.parquet"
+fname = "../data/stallion.parquet"
 if os.path.exists(fname):
+    print(f"file exists.")
     data = pd.read_parquet(fname)
 else:
+    print(f"download data online.")
     data = get_stallion_data()
 
 # add time index
@@ -65,8 +64,10 @@ special_days = [
     "music_fest",
 ]
 data[special_days] = data[special_days].apply(lambda x: x.map({0: "-", 1: x.name})).astype("category")
-pprint.pprint(data.columns)
-pprint.pprint(data.sample(6, random_state=521))
+print(data.shape, data.columns)
+# pprint.pprint(data.sample(6, random_state=521))
+print(data[special_days[:4]])
+print(data.dtypes)
 
 max_prediction_length = 6
 max_encoder_length = 24
@@ -117,7 +118,6 @@ for idx, data in val_dataloader:
     print(f"{idx}, {data}")
     break
 
-sys.exit()
 # calculate baseline mean absolute error, i.e. predict next value as the last available value from the history
 # baseline_predictions = Baseline().predict(val_dataloader, return_y=True)
 # MAE()(baseline_predictions.output, baseline_predictions.y)
@@ -130,7 +130,7 @@ lr_logger = LearningRateMonitor()  # log the learning rate
 logger = TensorBoardLogger("lightning_logs")  # logging results to a tensorboard
 
 trainer = pl.Trainer(
-    max_epochs=50,
+    max_epochs=6,
     accelerator="cpu",
     enable_model_summary=True,
     gradient_clip_val=0.1,
@@ -147,7 +147,7 @@ tft = TemporalFusionTransformer.from_dataset(
     attention_head_size=2,
     dropout=0.1,
     hidden_continuous_size=8,
-    loss=QuantileLoss(),
+    loss=QuantileLoss(quantiles=[0.5]),
     log_interval=10,  # uncomment for learning rate finder and otherwise, e.g. to 10 for logging every 10 batches
     optimizer="Ranger",
     reduce_on_plateau_patience=4,
@@ -164,7 +164,6 @@ trainer.fit(
 sys.exit()
 ## Hyperparameter tuning
 import pickle
-
 from pytorch_forecasting.models.temporal_fusion_transformer.tuning import optimize_hyperparameters
 
 # create study
