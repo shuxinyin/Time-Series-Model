@@ -2,7 +2,7 @@
 
 
 # ignore ALL files in ANY directory named temp
-tft/code/SelfAttention.py
+data/
 #!output/out_dir_put_here
 
 
