@@ -69,7 +69,7 @@ top F1 score of results on test：
 - [Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting](https://arxiv.org/pdf/1912.09363.pdf)
 - [Informer: Beyond Efficient Transformer for Long Sequence](https://arxiv.org/abs/2012.07436)
 - [A Time Series is Worth 64 Words: Long-term Forecasting with Transformers.](https://arxiv.org/abs/2211.14730)
-
+- [tft code refer](https://github.com/PlaytikaOSS/tft-torch)
 
 
 
