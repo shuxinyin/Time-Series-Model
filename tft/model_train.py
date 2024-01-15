@@ -14,7 +14,7 @@ import tft_torch.loss as tft_loss
 from utils import weight_init, DictDataSet, EarlyStopping, QueueAggregator
 
 # ### Data-related
-data_path = '../data/favorita-grocery-sales-forecasting/data.pickle'
+data_path = '../data/grocery_sales/data.pickle'
 
 with open(data_path, 'rb') as fp:
     data = pickle.load(fp)
